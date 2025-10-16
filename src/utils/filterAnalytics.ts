@@ -1,4 +1,5 @@
 import { AnalyticsData, FinancialRecord, CategorySummary, CorrespondentSummary, DateSummary } from '../types/financial';
+import { generateDateRange, compareDates } from './dateUtils';
 
 export const filterAnalytics = (
   analytics: AnalyticsData,
@@ -44,6 +45,10 @@ export const filterAnalytics = (
 };
 
 const calculateByDate = (records: FinancialRecord[]): DateSummary[] => {
+  if (records.length === 0) {
+    return [];
+  }
+
   const dateMap = new Map<string, DateSummary>();
 
   records.forEach((record) => {
@@ -65,7 +70,32 @@ const calculateByDate = (records: FinancialRecord[]): DateSummary[] => {
     summary.receiptsEur += record.receiptsEur;
   });
 
-  return Array.from(dateMap.values()).sort((a, b) => a.date.localeCompare(b.date));
+  const allDates = records.map(r => r.date).filter(d => d);
+  if (allDates.length === 0) {
+    return [];
+  }
+
+  allDates.sort(compareDates);
+  const minDate = allDates[0];
+  const maxDate = allDates[allDates.length - 1];
+
+  const fullDateRange = generateDateRange(minDate, maxDate);
+
+  const result: DateSummary[] = fullDateRange.map(date => {
+    if (dateMap.has(date)) {
+      return dateMap.get(date)!;
+    } else {
+      return {
+        date,
+        payments: 0,
+        receipts: 0,
+        paymentsEur: 0,
+        receiptsEur: 0,
+      };
+    }
+  });
+
+  return result;
 };
 
 const calculateByCategory = (records: FinancialRecord[], selectedCategories: string[]): CategorySummary[] => {
