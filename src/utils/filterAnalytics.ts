@@ -76,7 +76,7 @@ const calculateByDate = (records: FinancialRecord[]): DateSummary[] => {
     catData.payments += record.payments;
     catData.receipts += record.receipts;
 
-    const correspondent = record.correspondent || 'Неизвестен';
+    const correspondent = record.correspondent && record.correspondent.trim() !== '' ? record.correspondent : 'Без контрагент';
     if (!summary.byCorrespondent!.has(correspondent)) {
       summary.byCorrespondent!.set(correspondent, { payments: 0, receipts: 0 });
     }
@@ -123,7 +123,7 @@ const calculateByCorrespondent = (records: FinancialRecord[], selectedCorrespond
   const correspondentMap = new Map<string, CorrespondentSummary>();
 
   records.forEach((record) => {
-    const correspondent = record.correspondent || 'Неизвестен';
+    const correspondent = record.correspondent && record.correspondent.trim() !== '' ? record.correspondent : 'Без контрагент';
     if (!correspondentMap.has(correspondent)) {
       correspondentMap.set(correspondent, {
         correspondent,
@@ -151,27 +151,6 @@ const calculateByCorrespondent = (records: FinancialRecord[], selectedCorrespond
 };
 
 const extractCategoryFromDescription = (description: string): string => {
-  if (!description) return 'Други';
-
-  const lowerDesc = description.toLowerCase();
-
-  if (lowerDesc.includes('лихва') || lowerDesc.includes('interest')) return 'ПЛАЩАНЕ НА ЛИХВА';
-  if (lowerDesc.includes('главница') || lowerDesc.includes('principal')) return 'ПОГАСЯВАНЕ НА ГЛАВНИЦА';
-  if (lowerDesc.includes('такса обслужване') || lowerDesc.includes('service fee')) return 'ТАКСА ОБСЛУЖВАНЕ';
-  if (lowerDesc.includes('комисион') || lowerDesc.includes('commission')) return 'КОМИСИОННИ';
-  if (lowerDesc.includes('заплата') || lowerDesc.includes('salary')) return 'Заплати';
-  if (lowerDesc.includes('наем') || lowerDesc.includes('rent')) return 'Наем';
-  if (lowerDesc.includes('данък') || lowerDesc.includes('tax')) return 'Данъци';
-  if (lowerDesc.includes('услуга') || lowerDesc.includes('service')) return 'Услуги';
-  if (lowerDesc.includes('комунал') || lowerDesc.includes('utility')) return 'Комунални';
-  if (lowerDesc.includes('стока') || lowerDesc.includes('product')) return 'Стоки';
-  if (lowerDesc.includes('транспорт') || lowerDesc.includes('transport')) return 'Транспорт';
-  if (lowerDesc.includes('реклама') || lowerDesc.includes('marketing')) return 'Реклама';
-  if (lowerDesc.includes('материал') || lowerDesc.includes('material')) return 'Материали';
-  if (lowerDesc.includes('осигуровка') || lowerDesc.includes('insurance')) return 'Осигуровки';
-  if (lowerDesc.includes('превод') || lowerDesc.includes('transfer')) return 'Преводи';
-  if (lowerDesc.includes('внос') || lowerDesc.includes('deposit')) return 'Внос';
-  if (lowerDesc.includes('теглене') || lowerDesc.includes('withdrawal')) return 'Теглене';
-
-  return 'Други';
+  if (!description || description.trim() === '') return 'Без описание';
+  return description.trim();
 };

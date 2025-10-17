@@ -26,8 +26,8 @@ export const parseExcelFile = (file: File): Promise<AnalyticsData> => {
             paymentsEur: parseFloat(row[3]) || 0,
             receipts: parseFloat(row[4]) || 0,
             receiptsEur: parseFloat(row[5]) || 0,
-            description: row[6] ? String(row[6]) : '',
-            correspondent: row[7] ? String(row[7]) : 'Неизвестен',
+            description: row[6] ? String(row[6]).trim() : '',
+            correspondent: row[7] ? String(row[7]).trim() : '',
             interimBalance: parseFloat(row[8]) || 0,
             interimBalanceEur: parseFloat(row[9]) || 0,
             paymentBasis: row[10] ? String(row[10]) : '',
@@ -104,7 +104,7 @@ const calculateByDate = (records: FinancialRecord[]): DateSummary[] => {
     catData.payments += record.payments;
     catData.receipts += record.receipts;
 
-    const correspondent = record.correspondent || 'Неизвестен';
+    const correspondent = record.correspondent && record.correspondent.trim() !== '' ? record.correspondent : 'Без контрагент';
     if (!summary.byCorrespondent!.has(correspondent)) {
       summary.byCorrespondent!.set(correspondent, { payments: 0, receipts: 0 });
     }
@@ -147,7 +147,7 @@ const calculateByCorrespondent = (records: FinancialRecord[]): CorrespondentSumm
   const correspondentMap = new Map<string, CorrespondentSummary>();
 
   records.forEach((record) => {
-    const correspondent = record.correspondent || 'Неизвестен';
+    const correspondent = record.correspondent && record.correspondent.trim() !== '' ? record.correspondent : 'Без контрагент';
     if (!correspondentMap.has(correspondent)) {
       correspondentMap.set(correspondent, {
         correspondent,
@@ -171,29 +171,8 @@ const calculateByCorrespondent = (records: FinancialRecord[]): CorrespondentSumm
 };
 
 const extractCategory = (description: string): string => {
-  if (!description) return 'Други';
-
-  const lowerDesc = description.toLowerCase();
-
-  if (lowerDesc.includes('лихва') || lowerDesc.includes('interest')) return 'ПЛАЩАНЕ НА ЛИХВА';
-  if (lowerDesc.includes('главница') || lowerDesc.includes('principal')) return 'ПОГАСЯВАНЕ НА ГЛАВНИЦА';
-  if (lowerDesc.includes('такса обслужване') || lowerDesc.includes('service fee')) return 'ТАКСА ОБСЛУЖВАНЕ';
-  if (lowerDesc.includes('комисион') || lowerDesc.includes('commission')) return 'КОМИСИОННИ';
-  if (lowerDesc.includes('заплата') || lowerDesc.includes('salary')) return 'Заплати';
-  if (lowerDesc.includes('наем') || lowerDesc.includes('rent')) return 'Наем';
-  if (lowerDesc.includes('данък') || lowerDesc.includes('tax')) return 'Данъци';
-  if (lowerDesc.includes('услуга') || lowerDesc.includes('service')) return 'Услуги';
-  if (lowerDesc.includes('комунал') || lowerDesc.includes('utility')) return 'Комунални';
-  if (lowerDesc.includes('стока') || lowerDesc.includes('product')) return 'Стоки';
-  if (lowerDesc.includes('транспорт') || lowerDesc.includes('transport')) return 'Транспорт';
-  if (lowerDesc.includes('реклама') || lowerDesc.includes('marketing')) return 'Реклама';
-  if (lowerDesc.includes('материал') || lowerDesc.includes('material')) return 'Материали';
-  if (lowerDesc.includes('осигуровка') || lowerDesc.includes('insurance')) return 'Осигуровки';
-  if (lowerDesc.includes('превод') || lowerDesc.includes('transfer')) return 'Преводи';
-  if (lowerDesc.includes('внос') || lowerDesc.includes('deposit')) return 'Внос';
-  if (lowerDesc.includes('теглене') || lowerDesc.includes('withdrawal')) return 'Теглене';
-
-  return 'Други';
+  if (!description || description.trim() === '') return 'Без описание';
+  return description.trim();
 };
 
 const formatExcelDate = (value: any): string => {
