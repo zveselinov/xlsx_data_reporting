@@ -20,8 +20,8 @@ export const parseExcelFile = (file: File): Promise<AnalyticsData> => {
           if (!row || row.length === 0 || !row[0]) continue;
 
           const record: FinancialRecord = {
-            date: row[0] ? String(row[0]) : '',
-            time: row[1] ? String(row[1]) : '',
+            date: row[0] ? formatExcelDate(row[0]) : '',
+            time: row[1] ? formatExcelTime(row[1]) : '',
             payments: parseFloat(row[2]) || 0,
             paymentsEur: parseFloat(row[3]) || 0,
             receipts: parseFloat(row[4]) || 0,
@@ -85,6 +85,8 @@ const calculateByDate = (records: FinancialRecord[]): DateSummary[] => {
         receipts: 0,
         paymentsEur: 0,
         receiptsEur: 0,
+        byCategory: new Map(),
+        byCorrespondent: new Map(),
       });
     }
 
@@ -93,6 +95,22 @@ const calculateByDate = (records: FinancialRecord[]): DateSummary[] => {
     summary.receipts += record.receipts;
     summary.paymentsEur += record.paymentsEur;
     summary.receiptsEur += record.receiptsEur;
+
+    const category = extractCategory(record.description);
+    if (!summary.byCategory!.has(category)) {
+      summary.byCategory!.set(category, { payments: 0, receipts: 0 });
+    }
+    const catData = summary.byCategory!.get(category)!;
+    catData.payments += record.payments;
+    catData.receipts += record.receipts;
+
+    const correspondent = record.correspondent || 'Неизвестен';
+    if (!summary.byCorrespondent!.has(correspondent)) {
+      summary.byCorrespondent!.set(correspondent, { payments: 0, receipts: 0 });
+    }
+    const corrData = summary.byCorrespondent!.get(correspondent)!;
+    corrData.payments += record.payments;
+    corrData.receipts += record.receipts;
   });
 
   return Array.from(dateMap.values()).sort((a, b) => a.date.localeCompare(b.date));
@@ -176,4 +194,27 @@ const extractCategory = (description: string): string => {
   if (lowerDesc.includes('теглене') || lowerDesc.includes('withdrawal')) return 'Теглене';
 
   return 'Други';
+};
+
+const formatExcelDate = (value: any): string => {
+  if (typeof value === 'number') {
+    const excelEpoch = new Date(1899, 11, 30);
+    const date = new Date(excelEpoch.getTime() + value * 86400000);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+  }
+  return String(value);
+};
+
+const formatExcelTime = (value: any): string => {
+  if (typeof value === 'number') {
+    const totalSeconds = Math.round(value * 86400);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }
+  return String(value);
 };

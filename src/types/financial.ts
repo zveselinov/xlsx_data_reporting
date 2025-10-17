@@ -37,6 +37,8 @@ export interface DateSummary {
   receipts: number;
   paymentsEur: number;
   receiptsEur: number;
+  byCategory?: Map<string, { payments: number; receipts: number }>;
+  byCorrespondent?: Map<string, { payments: number; receipts: number }>;
 }
 
 export interface AnalyticsData {
@@ -48,4 +50,6 @@ export interface AnalyticsData {
   byDate: DateSummary[];
   byCategory: CategorySummary[];
   byCorrespondent: CorrespondentSummary[];
+  selectedCategories?: string[];
+  selectedCorrespondents?: string[];
 }

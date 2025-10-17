@@ -40,6 +40,8 @@ export const filterAnalytics = (
     byDate,
     byCategory,
     byCorrespondent,
+    selectedCategories,
+    selectedCorrespondents,
   };
 };
 
@@ -55,6 +57,8 @@ const calculateByDate = (records: FinancialRecord[]): DateSummary[] => {
         receipts: 0,
         paymentsEur: 0,
         receiptsEur: 0,
+        byCategory: new Map(),
+        byCorrespondent: new Map(),
       });
     }
 
@@ -63,6 +67,22 @@ const calculateByDate = (records: FinancialRecord[]): DateSummary[] => {
     summary.receipts += record.receipts;
     summary.paymentsEur += record.paymentsEur;
     summary.receiptsEur += record.receiptsEur;
+
+    const category = extractCategoryFromDescription(record.description);
+    if (!summary.byCategory!.has(category)) {
+      summary.byCategory!.set(category, { payments: 0, receipts: 0 });
+    }
+    const catData = summary.byCategory!.get(category)!;
+    catData.payments += record.payments;
+    catData.receipts += record.receipts;
+
+    const correspondent = record.correspondent || 'Неизвестен';
+    if (!summary.byCorrespondent!.has(correspondent)) {
+      summary.byCorrespondent!.set(correspondent, { payments: 0, receipts: 0 });
+    }
+    const corrData = summary.byCorrespondent!.get(correspondent)!;
+    corrData.payments += record.payments;
+    corrData.receipts += record.receipts;
   });
 
   return Array.from(dateMap.values()).sort((a, b) => a.date.localeCompare(b.date));
