@@ -151,13 +151,13 @@ const calculateByCorrespondent = (records: FinancialRecord[], selectedCorrespond
 };
 
 const extractCategoryFromDescription = (description: string): string => {
-  if (!description) return 'Некатегоризирани';
+  if (!description) return 'Други';
 
   const lowerDesc = description.toLowerCase();
 
   if (lowerDesc.includes('лихва') || lowerDesc.includes('interest')) return 'ПЛАЩАНЕ НА ЛИХВА';
   if (lowerDesc.includes('главница') || lowerDesc.includes('principal')) return 'ПОГАСЯВАНЕ НА ГЛАВНИЦА';
-  if (lowerDesc.includes('такса обслужван') || lowerDesc.includes('service fee')) return 'ТАКСА ОБСЛУЖВАНЕ';
+  if (lowerDesc.includes('такса обслужване') || lowerDesc.includes('service fee')) return 'ТАКСА ОБСЛУЖВАНЕ';
   if (lowerDesc.includes('комисион') || lowerDesc.includes('commission')) return 'КОМИСИОННИ';
   if (lowerDesc.includes('заплата') || lowerDesc.includes('salary')) return 'Заплати';
   if (lowerDesc.includes('наем') || lowerDesc.includes('rent')) return 'Наем';

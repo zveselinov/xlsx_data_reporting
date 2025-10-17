@@ -79,11 +79,11 @@ export const SummaryTables: React.FC<SummaryTablesProps> = ({ analytics }) => {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">Разпределение по категории</h3>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transition-colors duration-200">
+        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Разпределение по категории</h3>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-gray-50 dark:bg-gray-900">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Категория
@@ -127,11 +127,11 @@ export const SummaryTables: React.FC<SummaryTablesProps> = ({ analytics }) => {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">Разпределение по контрагенти</h3>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transition-colors duration-200">
+        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Разпределение по контрагенти</h3>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-gray-50 dark:bg-gray-900">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Контрагент
