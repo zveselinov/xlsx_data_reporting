@@ -53,8 +53,8 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, loading })
     <div
       className={`relative border-2 border-dashed rounded-lg p-12 text-center transition-all ${
         dragActive
-          ? 'border-blue-500 bg-blue-50'
-          : 'border-gray-300 hover:border-gray-400'
+          ? 'border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20'
+          : 'border-gray-300 hover:border-gray-400 dark:border-gray-600 dark:hover:border-gray-500'
       } ${loading ? 'opacity-50 pointer-events-none' : ''}`}
       onDragEnter={handleDrag}
       onDragLeave={handleDrag}
@@ -68,11 +68,11 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, loading })
         accept=".xlsx,.xls"
         disabled={loading}
       />
-      <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-      <p className="text-lg font-medium text-gray-700 mb-2">
+      <Upload className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
+      <p className="text-lg font-medium text-gray-700 dark:text-gray-200 mb-2">
         {loading ? 'Обработване на файла...' : 'Качете XLSX или XLS файл'}
       </p>
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-gray-500 dark:text-gray-400">
         Влачете и пуснете файл или кликнете за избор
       </p>
     </div>

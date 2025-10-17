@@ -35,6 +35,7 @@ export const Charts: React.FC<ChartsProps> = ({ analytics, onChartsReady }) => {
   const timeChartRef = useRef<any>(null);
   const categoryChartRef = useRef<any>(null);
   const correspondentChartRef = useRef<any>(null);
+  const isDarkMode = document.documentElement.classList.contains('dark');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -223,8 +224,8 @@ export const Charts: React.FC<ChartsProps> = ({ analytics, onChartsReady }) => {
 
   return (
     <div className="space-y-8">
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">Времева диаграма</h3>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transition-colors duration-200">
+        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Времева диаграма</h3>
         <div className="h-80">
           <Line
             ref={timeChartRef}
@@ -235,6 +236,27 @@ export const Charts: React.FC<ChartsProps> = ({ analytics, onChartsReady }) => {
               plugins: {
                 legend: {
                   position: 'top',
+                  labels: {
+                    color: isDarkMode ? 'rgb(229, 231, 235)' : 'rgb(31, 41, 55)',
+                  },
+                },
+              },
+              scales: {
+                x: {
+                  ticks: {
+                    color: isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(107, 114, 128)',
+                  },
+                  grid: {
+                    color: isDarkMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(229, 231, 235, 0.5)',
+                  },
+                },
+                y: {
+                  ticks: {
+                    color: isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(107, 114, 128)',
+                  },
+                  grid: {
+                    color: isDarkMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(229, 231, 235, 0.5)',
+                  },
                 },
               },
             }}
@@ -242,8 +264,8 @@ export const Charts: React.FC<ChartsProps> = ({ analytics, onChartsReady }) => {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transition-colors duration-200">
+        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
           Разпределение по категории
         </h3>
         <div className="h-96 flex justify-center">
@@ -256,6 +278,9 @@ export const Charts: React.FC<ChartsProps> = ({ analytics, onChartsReady }) => {
               plugins: {
                 legend: {
                   position: 'right',
+                  labels: {
+                    color: isDarkMode ? 'rgb(229, 231, 235)' : 'rgb(31, 41, 55)',
+                  },
                 },
               },
             }}
@@ -263,8 +288,8 @@ export const Charts: React.FC<ChartsProps> = ({ analytics, onChartsReady }) => {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transition-colors duration-200">
+        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
           Разпределение по контрагенти
         </h3>
         <div className="h-96">
@@ -277,6 +302,9 @@ export const Charts: React.FC<ChartsProps> = ({ analytics, onChartsReady }) => {
               plugins: {
                 legend: {
                   position: 'top',
+                  labels: {
+                    color: isDarkMode ? 'rgb(229, 231, 235)' : 'rgb(31, 41, 55)',
+                  },
                 },
               },
               scales: {
@@ -284,6 +312,18 @@ export const Charts: React.FC<ChartsProps> = ({ analytics, onChartsReady }) => {
                   ticks: {
                     maxRotation: 45,
                     minRotation: 45,
+                    color: isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(107, 114, 128)',
+                  },
+                  grid: {
+                    color: isDarkMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(229, 231, 235, 0.5)',
+                  },
+                },
+                y: {
+                  ticks: {
+                    color: isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(107, 114, 128)',
+                  },
+                  grid: {
+                    color: isDarkMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(229, 231, 235, 0.5)',
                   },
                 },
               },
