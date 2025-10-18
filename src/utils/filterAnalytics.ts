@@ -46,24 +46,46 @@ export const filterAnalytics = (
 };
 
 const calculateByDate = (records: FinancialRecord[]): DateSummary[] => {
-  return records.map((record) => {
+  const dateMap = new Map<string, DateSummary>();
+
+  records.forEach((record) => {
+    const date = record.date;
+    if (!dateMap.has(date)) {
+      dateMap.set(date, {
+        date,
+        payments: 0,
+        receipts: 0,
+        paymentsEur: 0,
+        receiptsEur: 0,
+        byCategory: new Map(),
+        byCorrespondent: new Map(),
+      });
+    }
+
+    const summary = dateMap.get(date)!;
+    summary.payments += record.payments;
+    summary.receipts += record.receipts;
+    summary.paymentsEur += record.paymentsEur;
+    summary.receiptsEur += record.receiptsEur;
+
     const category = extractCategoryFromDescription(record.description);
-    const byCategory = new Map<string, { payments: number; receipts: number }>();
-    byCategory.set(category, { payments: record.payments, receipts: record.receipts });
+    if (!summary.byCategory!.has(category)) {
+      summary.byCategory!.set(category, { payments: 0, receipts: 0 });
+    }
+    const catData = summary.byCategory!.get(category)!;
+    catData.payments += record.payments;
+    catData.receipts += record.receipts;
 
-    const byCorrespondent = new Map<string, { payments: number; receipts: number }>();
-    byCorrespondent.set(record.correspondent, { payments: record.payments, receipts: record.receipts });
+    const correspondent = record.correspondent && record.correspondent.trim() !== '' ? record.correspondent : 'Без контрагент';
+    if (!summary.byCorrespondent!.has(correspondent)) {
+      summary.byCorrespondent!.set(correspondent, { payments: 0, receipts: 0 });
+    }
+    const corrData = summary.byCorrespondent!.get(correspondent)!;
+    corrData.payments += record.payments;
+    corrData.receipts += record.receipts;
+  });
 
-    return {
-      date: record.date,
-      payments: record.payments,
-      receipts: record.receipts,
-      paymentsEur: record.paymentsEur,
-      receiptsEur: record.receiptsEur,
-      byCategory,
-      byCorrespondent,
-    };
-  }).sort((a, b) => a.date.localeCompare(b.date));
+  return Array.from(dateMap.values()).sort((a, b) => a.date.localeCompare(b.date));
 };
 
 const calculateByCategory = (records: FinancialRecord[], selectedCategories: string[]): CategorySummary[] => {
@@ -129,5 +151,6 @@ const calculateByCorrespondent = (records: FinancialRecord[], selectedCorrespond
 };
 
 const extractCategoryFromDescription = (description: string): string => {
+  if (!description || description.trim() === '') return 'Без описание';
   return description.trim();
 };
