@@ -32,13 +32,19 @@ export const SummaryTables: React.FC<SummaryTablesProps> = ({ analytics }) => {
       </div>
 
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transition-colors duration-200">
-        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Разпределение по дати</h3>
+        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Детайлни записи по дати</h3>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-900">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Дата
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Описание
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Контрагент
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Плащания (BGN)
@@ -55,22 +61,28 @@ export const SummaryTables: React.FC<SummaryTablesProps> = ({ analytics }) => {
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              {analytics.byDate.map((item, index) => (
+              {analytics.records.map((record, index) => (
                 <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                    {item.date}
+                    {record.date}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
+                    {record.description}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
+                    {record.correspondent}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-right text-red-600 dark:text-red-400">
-                    {item.payments.toFixed(2)}
+                    {record.payments.toFixed(2)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-right text-green-600 dark:text-green-400">
-                    {item.receipts.toFixed(2)}
+                    {record.receipts.toFixed(2)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-600 dark:text-gray-400">
-                    {item.paymentsEur.toFixed(2)}
+                    {record.paymentsEur.toFixed(2)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-600 dark:text-gray-400">
-                    {item.receiptsEur.toFixed(2)}
+                    {record.receiptsEur.toFixed(2)}
                   </td>
                 </tr>
               ))}
