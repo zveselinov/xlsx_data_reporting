@@ -11,7 +11,7 @@ export const SummaryTables: React.FC<SummaryTablesProps> = ({ analytics }) => {
 
   const sortedByDate = useMemo(() => {
     const parseDate = (dateStr: string) => {
-      const parts = dateStr.split('.');
+      const parts = dateStr.split('/');
       if (parts.length === 3) {
         return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
       }
