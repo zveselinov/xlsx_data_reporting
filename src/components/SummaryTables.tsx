@@ -1,36 +1,10 @@
 import { AnalyticsData } from '../types/financial';
-import { useState, useMemo } from 'react';
-import { ChevronUp, ChevronDown } from 'lucide-react';
 
 interface SummaryTablesProps {
   analytics: AnalyticsData;
 }
 
 export const SummaryTables: React.FC<SummaryTablesProps> = ({ analytics }) => {
-  const [dateSortOrder, setDateSortOrder] = useState<'desc' | 'asc'>('desc');
-
-  const sortedByDate = useMemo(() => {
-    const parseDate = (dateStr: string) => {
-      const parts = dateStr.split('/');
-      if (parts.length === 3) {
-        return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
-      }
-      return new Date(dateStr);
-    };
-
-    const sorted = [...analytics.byDate].sort((a, b) => {
-      const dateA = parseDate(a.date);
-      const dateB = parseDate(b.date);
-      return dateA.getTime() - dateB.getTime();
-    });
-
-    return dateSortOrder === 'desc' ? sorted.reverse() : sorted;
-  }, [analytics.byDate, dateSortOrder]);
-
-  const toggleDateSort = () => {
-    setDateSortOrder(prev => prev === 'desc' ? 'asc' : 'desc');
-  };
-
   return (
     <div className="space-y-8">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transition-colors duration-200">
@@ -63,18 +37,8 @@ export const SummaryTables: React.FC<SummaryTablesProps> = ({ analytics }) => {
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-900">
               <tr>
-                <th
-                  onClick={toggleDateSort}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors select-none"
-                >
-                  <div className="flex items-center gap-2">
-                    Дата
-                    {dateSortOrder === 'desc' ? (
-                      <ChevronDown className="h-4 w-4" />
-                    ) : (
-                      <ChevronUp className="h-4 w-4" />
-                    )}
-                  </div>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Дата
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Плащания (BGN)
@@ -91,7 +55,7 @@ export const SummaryTables: React.FC<SummaryTablesProps> = ({ analytics }) => {
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              {sortedByDate.map((item, index) => (
+              {analytics.byDate.map((item, index) => (
                 <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
                     {item.date}

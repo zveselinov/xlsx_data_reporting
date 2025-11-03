@@ -85,19 +85,7 @@ const calculateByDate = (records: FinancialRecord[]): DateSummary[] => {
     corrData.receipts += record.receipts;
   });
 
-  return Array.from(dateMap.values()).sort((a, b) => {
-    const parseDate = (dateStr: string) => {
-      const parts = dateStr.split('/');
-      if (parts.length === 3) {
-        return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
-      }
-      return new Date(dateStr);
-    };
-
-    const dateA = parseDate(a.date);
-    const dateB = parseDate(b.date);
-    return dateA.getTime() - dateB.getTime();
-  });
+  return Array.from(dateMap.values()).sort((a, b) => a.date.localeCompare(b.date));
 };
 
 const calculateByCategory = (records: FinancialRecord[], selectedCategories: string[]): CategorySummary[] => {
