@@ -18,11 +18,13 @@ export const SummaryTables: React.FC<SummaryTablesProps> = ({ analytics }) => {
       return new Date(dateStr);
     };
 
-    return [...analytics.byDate].sort((a, b) => {
+    const sorted = [...analytics.byDate].sort((a, b) => {
       const dateA = parseDate(a.date);
       const dateB = parseDate(b.date);
-      return dateSortOrder === 'desc' ? dateB.getTime() - dateA.getTime() : dateA.getTime() - dateB.getTime();
+      return dateA.getTime() - dateB.getTime();
     });
+
+    return dateSortOrder === 'desc' ? sorted.reverse() : sorted;
   }, [analytics.byDate, dateSortOrder]);
 
   const toggleDateSort = () => {
